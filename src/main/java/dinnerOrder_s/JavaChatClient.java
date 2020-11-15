@@ -34,9 +34,9 @@ public class JavaChatClient {
     PrintWriter out;
 
     JFrame frame;
-    JTextField textField;
+    JTextField textField,textField1;
     JTextArea messageArea,messageArea2;
-    JToggleButton b1,b2,b3,b4,b5,b6,b7,b8,b9,b0,debug;
+    JToggleButton b1,b2,b3,b4,b5,b6,b7,b8,b9,b11,b12,b13,b0,debug;
     JRadioButton r1,r2,r3,r0;
     JButton place,cancel,refresh;
     String Order;
@@ -56,19 +56,25 @@ public class current {
 }     
     
 static class pizza {
+    static String name = "Pizza Chat";
+            
     static String[] size = {"Small","Medium","Large"};
     static String[] sizeDone = { "Pizza Size Small, ",
          "Pizza Size Medium, ",
          "Pizza Size Large, " };
     static String b1 = "Pepperoni";
-    static String b2 = "Mushrooms";
-    static String b3 = "Onions";
-    static String b4 = "Sausage";
-    static String b5 = "Bacon";
+    static String b2 = "Sausage";
+    static String b3 = "Meatballs";
+    static String b4 = "Bacon";
+    static String b5 = "Mushrooms";
     static String b6 = "Black Olives";
     static String b7 = "Green Peppers";
-    static String b8 = "Extra Cheese";
-    static String b9 = "Meatballs";
+    static String b8 = "Onions";
+    static String b9 = "Spinach";
+    
+    static String b11 = "Ricotta Cheese";
+    static String b12 = "Margherita";
+    static String b13 = "Extra Cheese";
     
     static String r1 = "Small";
     static String r2 = "Medium";
@@ -77,6 +83,7 @@ static class pizza {
 }
 
 static class hero {
+        static String name = "Hero Chat";
     static String[] size = {"mini","half","whole"};
     static String[] sizeDone = { "Hero Size mini, ",
          "Hero Size half, ",
@@ -91,6 +98,12 @@ static class hero {
     static String b7 = "Green Peppers";
     static String b8 = "Lettuce";
     static String b9 = "Tomato";
+    
+    static String b11 = "Onions";
+    static String b12 = "Banana Peppers";
+    static String b13 = "Oil & Vineger";
+    
+    
     
     static String r1 = "Mini";
     static String r2 = "Half";
@@ -114,7 +127,17 @@ static class hero {
      private void sendStatus()
         {
             
-    
+        if ( dinnerType != null ) {
+            String sendtype = "$"+dinnerType;
+            out.println(sendtype);
+            
+            /*
+            messageArea.append("send[");
+            messageArea.append(sendtype);
+            messageArea.append("]\n");
+            */
+       //     System.out.println( sendtype );
+        }
             
         for ( JRadioButton r : radios ) {
             if ( r.isSelected() )
@@ -230,7 +253,9 @@ static class hero {
                 if ( r1.isSelected() )
                 {
                   r2.setSelected(false);
+                  out.println("^-"+r2.getText());
                   r3.setSelected(false);
+                  out.println("^-"+r3.getText());
                   out.println("^+"+r1.getText());
                 }
                 else
@@ -242,7 +267,10 @@ static class hero {
                 if ( r2.isSelected() )
                 {
                   r1.setSelected(false);
+                   out.println("^-"+r1.getText());
                   r3.setSelected(false);
+                   out.println("^-"+r3.getText());
+                  
                   out.println("^+"+r2.getText());
                 }
                 else
@@ -254,7 +282,10 @@ static class hero {
                 if ( r3.isSelected() )
                 {
                   r1.setSelected(false);
+                   out.println("^-"+r1.getText());
                   r2.setSelected(false);
+                   out.println("^-"+r2.getText());
+                   
                   out.println("^+"+r3.getText());
                 }
                 else
@@ -300,19 +331,7 @@ static class hero {
     }    
     
     
-    /**
-     * Connects to the server then enters the processing loop.
-     */
-    private void run() throws IOException {
-        dinnerType = getDinnerType();
-        if ( dinnerType.contentEquals("Pizza"))
-            dinnerIndex = 0;
-        else if ( dinnerType.contentEquals("Hero"))
-            dinnerIndex = 1;
-        else
-            dinnerIndex = 0;
-        
-        
+     void setButtons() {
         if ( dinnerType.contentEquals("Pizza") )
         {
   
@@ -326,6 +345,11 @@ static class hero {
            b8.setText(pizza.b8);         
            b9.setText(pizza.b9);
 
+           b11.setText(pizza.b11);          
+           b12.setText(pizza.b12);         
+           b13.setText(pizza.b13);
+          
+           textField1.setText(pizza.name);
             
            r1.setText(pizza.r1);
            r2.setText(pizza.r2);            
@@ -343,14 +367,28 @@ static class hero {
            b7.setText(hero.b7);          
            b8.setText(hero.b8);         
            b9.setText(hero.b9);
-
+           
+           b11.setText(hero.b11);
+           b12.setText(hero.b12);
+           b13.setText(hero.b13);
             
+           textField1.setText(hero.name);
+           
            r1.setText(hero.r1);
            r2.setText(hero.r2);            
            r3.setText(hero.r3);          
         }
 
 
+     }
+     
+     
+    /**
+     * Connects to the server then enters the processing loop.
+     */
+    private void run() throws IOException {
+        
+        
         // System.out.println(dinnerType);
         // Make connection and initialize streams
         String serverAddress = getServerAddress();
@@ -359,14 +397,42 @@ static class hero {
         
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
+        int lineCnt = 0;
 
         // Process all messages from server, according to the protocol.
         while (true) {
+            
+             messageArea.append("top input"+lineCnt+"\n");
+            
             String line = in.readLine();
+            lineCnt++;
+            
+              messageArea.append("input<");
+              messageArea.append(line);
+              messageArea.append(">\n");
+            
             if (line.startsWith("SUBMITNAME")) {
                 out.println(getName());
             } else if (line.startsWith("NAMEACCEPTED")) {
                 textField.setEditable(true);
+                
+                if ( line.startsWith("NAMEACCEPTED 1 ") )
+            
+                    if (dinnerType == null ){
+                
+                    dinnerType = getDinnerType();
+        
+                    if ( dinnerType.contentEquals("Pizza"))
+                        dinnerIndex = 0;
+                    else if ( dinnerType.contentEquals("Hero"))
+                        dinnerIndex = 1;
+                    else
+                        dinnerIndex = 0;
+                
+                    setButtons();
+                    }
+                
+                
             } else if (line.startsWith("SYNC:")) {
                 messageArea2.append (line.substring(6) + " just joined the Chat\n");   
                 sendStatus();
@@ -406,24 +472,23 @@ static class hero {
                 
             } else if (line.startsWith("STUFF: ")) {
                 
-                 if ( debug.isSelected() )
+                if ( debug.isSelected() )
                     {               
                         messageArea.append("<");
                         messageArea.append(line.substring(7));
                         messageArea.append(">\n");
                     }
                  
-            for ( JToggleButton b : buttons ) {
-                String s = b.getText().substring(0,4);
-                if ( line.startsWith(s ,8) )
-                {
-                    b0 = b;
-                    break;
-                }
-            }
-                  
-               
-    
+                for ( JToggleButton b : buttons ) {
+                   // String s = b.getText().substring(0,4);
+                    String s = b.getText();
+                    if ( line.startsWith(s ,8) )
+                    {
+                        b0 = b;
+                        break;
+                    }
+               }
+
                 if (line.startsWith("+",7))
                     b0.setSelected(true);
                 else
@@ -432,7 +497,50 @@ static class hero {
                 
             } else if (line.startsWith("MESSAGE")) {
                 messageArea.append(line.substring(8) + "\n");
+            } else if (line.startsWith("TYPE")) {
+                dinnerType = line.substring(7);
+                 //dinnerType = getDinnerType();
+                 // debug 
+                 
+                 if ( debug.isSelected()) {
+                  messageArea.append("<");
+                  messageArea.append(line.substring(0));
+                  messageArea.append(">\n");
+                  
+                  messageArea.append("<");
+                  messageArea.append(line.substring(7));
+                  messageArea.append(">\n");
+                 }
+                 
+                if ( dinnerType.contentEquals("Pizza"))
+                    dinnerIndex = 0;
+                else if ( dinnerType.contentEquals("Hero"))
+                    dinnerIndex = 1;
+                else
+                    dinnerIndex = 0;
+                
+                setButtons();
             }
+            
+          /*
+            if (dinnerType == null ){
+                
+                dinnerType = getDinnerType();
+        
+                if ( dinnerType.contentEquals("Pizza"))
+                    dinnerIndex = 0;
+                else if ( dinnerType.contentEquals("Hero"))
+                    dinnerIndex = 1;
+                else
+                    dinnerIndex = 0;
+                
+                setButtons();
+            }
+            */
+          
+           messageArea.append("bottom input"+lineCnt+"\n");
+          
+          
         }
     }
   
@@ -451,6 +559,7 @@ static class hero {
         //  JFrame frame;
         client.frame = frame.getFrame();
         client.textField = frame.getTextField();
+        client.textField1 = frame.getTextField1();
         client.messageArea = frame.getMessageArea();
         client.messageArea2 = frame.getMessageArea2();
         
@@ -464,6 +573,11 @@ static class hero {
         client.b7 = frame.b7();
         client.b8 = frame.b8();
         client.b9 = frame.b9();
+        
+        client.b11 = frame.b11();
+        client.b12 = frame.b12();
+        client.b13 = frame.b13();
+        
         
         client.r1 = frame.r1();
         client.r2 = frame.r2();
@@ -482,7 +596,12 @@ static class hero {
         client.buttons.add(client.b6);
         client.buttons.add(client.b7);
         client.buttons.add(client.b8);
-        client.buttons.add(client.b9);   
+        client.buttons.add(client.b9);  
+        
+       client.buttons.add(client.b11);   
+       client.buttons.add(client.b12);   
+       client.buttons.add(client.b13);   
+        
  
         client.radios.add(client.r1);
         client.radios.add(client.r2);           

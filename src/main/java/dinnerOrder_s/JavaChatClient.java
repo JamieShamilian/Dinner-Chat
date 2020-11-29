@@ -111,7 +111,32 @@ static class hero {
              
 }
 
-
+static class burrito {
+    static String name = "Burrito Chat";
+            
+    static String[] size = {"Small","Medium","Large"};
+    static String[] sizeDone = { "Burrito Size Small, ",
+         "Burrito Size Medium, ",
+         "Burrito Size Large, " };
+    static String b1 = "Beef";
+    static String b2 = "Pulled Pork";
+    static String b3 = "Shredded Chicken";
+    static String b4 = "Cheddar Cheese";
+    static String b5 = "Black Beans";
+    static String b6 = "Pinto Beans";
+    static String b7 = "Pico De Gallo";
+    static String b8 = "Sout Cream";
+    static String b9 = "Guacamole";
+    
+    static String b11 = "No Rice";
+    static String b12 = "Brown Rice";
+    static String b13 = "Bowl Instead";
+    
+    static String r1 = "Small";
+    static String r2 = "Medium";
+    static String r3 = "Large";                            
+            
+}
     
     /**
      * Constructs the client by laying out the GUI and registering a
@@ -304,7 +329,7 @@ static class hero {
         return JOptionPane.showInputDialog(
             frame,
             "Enter IP Address of the Server:",
-            "Welcome to PizzaChat",
+            "Welcome to Dinner Chat",
             JOptionPane.QUESTION_MESSAGE);
     }
 
@@ -322,7 +347,7 @@ static class hero {
      public String getDinnerType() {
     
 
-        String[] options = {"Pizza", "Hero"};
+        String[] options = {"Pizza", "Hero", "Burrito"};
         //  ImageIcon icon = new ImageIcon("src/images/turtle32.png");
         String n = (String)JOptionPane.showInputDialog(null, "Which Type of dinner",
                 "Pizza", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
@@ -377,8 +402,29 @@ static class hero {
            r1.setText(hero.r1);
            r2.setText(hero.r2);            
            r3.setText(hero.r3);          
-        }
-
+        } else if ( dinnerType.contentEquals("Burrito") )
+        {
+  
+           b1.setText(burrito.b1);
+           b2.setText(burrito.b2);            
+           b3.setText(burrito.b3);          
+           b4.setText(burrito.b4);          
+           b5.setText(burrito.b5);          
+           b6.setText(burrito.b6);           
+           b7.setText(burrito.b7);          
+           b8.setText(burrito.b8);         
+           b9.setText(burrito.b9);
+           
+           b11.setText(burrito.b11);
+           b12.setText(burrito.b12);
+           b13.setText(burrito.b13);
+            
+           textField1.setText(burrito.name);
+           
+           r1.setText(burrito.r1);
+           r2.setText(burrito.r2);            
+           r3.setText(burrito.r3);          
+        } 
 
      }
      
@@ -402,15 +448,15 @@ static class hero {
         // Process all messages from server, according to the protocol.
         while (true) {
             
-             messageArea.append("top input"+lineCnt+"\n");
+         //   messageArea.append("top input"+lineCnt+"\n");
             
             String line = in.readLine();
             lineCnt++;
-            
+            /*
               messageArea.append("input<");
               messageArea.append(line);
               messageArea.append(">\n");
-            
+            */
             if (line.startsWith("SUBMITNAME")) {
                 out.println(getName());
             } else if (line.startsWith("NAMEACCEPTED")) {
@@ -426,6 +472,8 @@ static class hero {
                         dinnerIndex = 0;
                     else if ( dinnerType.contentEquals("Hero"))
                         dinnerIndex = 1;
+                     else if ( dinnerType.contentEquals("Burrito"))
+                        dinnerIndex = 2;
                     else
                         dinnerIndex = 0;
                 
@@ -538,7 +586,7 @@ static class hero {
             }
             */
           
-           messageArea.append("bottom input"+lineCnt+"\n");
+         //  messageArea.append("bottom input"+lineCnt+"\n");
           
           
         }

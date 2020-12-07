@@ -1,0 +1,27 @@
+{
+"name": "Hero Chat", 
+"buttonlist" : [          
+"Pepperoni",
+"Ham",
+"Salami",
+"Roast Beef",
+"Bacon",
+"Black Olives",
+"Green Peppers",
+"Lettuce",
+"Tomato",    
+"Onions",
+"Banana Peppers",
+"Oil & Vinegar"
+	],
+"radiolist": [
+"Mini",
+"Half",
+"Whole"
+	],      
+"sizelist":  [ 
+"Mini",
+"Half",
+"Whole"
+	]
+}

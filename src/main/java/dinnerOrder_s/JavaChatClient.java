@@ -2,6 +2,12 @@
  */
 package dinnerOrder_s;
 
+/**
+ *
+ * @author Jamie Shamilian
+ */
+
+
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,13 +27,15 @@ import javax.swing.JToggleButton;
 import javax.swing.JRadioButton;
 import javax.swing.JButton;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+ 
+import java.io.FileReader;
+import java.util.Iterator;
 
 
 
-/**
- *
- * @author jamie
- */
 public class JavaChatClient {
 
     BufferedReader in;
@@ -43,101 +51,13 @@ public class JavaChatClient {
     
     ArrayList<JToggleButton> buttons = new ArrayList<>(); 
     ArrayList<JRadioButton> radios = new ArrayList<>(); 
-  
+
     
     String dinnerType=null;
     int dinnerIndex = 0;
+         
     
-public class current {
-    String name;
-    String[] size ;
-    String[] sizeDone ;
-    
-}     
-    
-static class pizza {
-    static String name = "Pizza Chat";
-            
-    static String[] size = {"Small","Medium","Large"};
-    static String[] sizeDone = { "Pizza Size Small, ",
-         "Pizza Size Medium, ",
-         "Pizza Size Large, " };
-    static String b1 = "Pepperoni";
-    static String b2 = "Sausage";
-    static String b3 = "Meatballs";
-    static String b4 = "Bacon";
-    static String b5 = "Mushrooms";
-    static String b6 = "Black Olives";
-    static String b7 = "Green Peppers";
-    static String b8 = "Onions";
-    static String b9 = "Spinach";
-    
-    static String b11 = "Ricotta Cheese";
-    static String b12 = "Margherita";
-    static String b13 = "Extra Cheese";
-    
-    static String r1 = "Small";
-    static String r2 = "Medium";
-    static String r3 = "Large";                            
-            
-}
 
-static class hero {
-        static String name = "Hero Chat";
-    static String[] size = {"mini","half","whole"};
-    static String[] sizeDone = { "Hero Size mini, ",
-         "Hero Size half, ",
-         "Hero Size whole, " };
-        
-    static String b1 = "Pepperoni";
-    static String b2 = "Ham";
-    static String b3 = "Salami";
-    static String b4 = "Roast Beef";
-    static String b5 = "Bacon";
-    static String b6 = "Black Olives";
-    static String b7 = "Green Peppers";
-    static String b8 = "Lettuce";
-    static String b9 = "Tomato";
-    
-    static String b11 = "Onions";
-    static String b12 = "Banana Peppers";
-    static String b13 = "Oil & Vineger";
-    
-    
-    
-    static String r1 = "Mini";
-    static String r2 = "Half";
-    static String r3 = "Whole";                            
-             
-}
-
-static class burrito {
-    static String name = "Burrito Chat";
-            
-    static String[] size = {"Small","Medium","Large"};
-    static String[] sizeDone = { "Burrito Size Small, ",
-         "Burrito Size Medium, ",
-         "Burrito Size Large, " };
-    static String b1 = "Beef";
-    static String b2 = "Pulled Pork";
-    static String b3 = "Shredded Chicken";
-    static String b4 = "Cheddar Cheese";
-    static String b5 = "Black Beans";
-    static String b6 = "Pinto Beans";
-    static String b7 = "Pico De Gallo";
-    static String b8 = "Sout Cream";
-    static String b9 = "Guacamole";
-    
-    static String b11 = "No Rice";
-    static String b12 = "Brown Rice";
-    static String b13 = "Bowl Instead";
-    
-    static String r1 = "Small";
-    static String r2 = "Medium";
-    static String r3 = "Large";                            
-            
-}
-    
     /**
      * Constructs the client by laying out the GUI and registering a
      * listener with the textfield so that pressing Return in the
@@ -242,22 +162,13 @@ static class burrito {
             }
         });
         
-       
-        
+
         refresh.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 sendStatus();
             }
         });
    
-        /*
-        for ( JRadioButton r : radios ) {
-            
-            if ( r.isSelected() )
-                Order += ( r.getText() + ", ") ;
-        }
-        
-        */
         
         for ( JToggleButton b : buttons ) {
             
@@ -346,87 +257,104 @@ static class burrito {
 
      public String getDinnerType() {
     
+        String[] options = null;
+        int menucnt = 0;
+        
+        JSONParser parser = new JSONParser();
+        Object obj;
+ 
+               
+	try {
+         
+            obj = parser.parse(new FileReader("Menu.json"));
+            JSONObject jsonObject = (JSONObject) obj;
+            JSONArray menulist = (JSONArray) jsonObject.get("menulist");
+            Iterator<JSONObject> iterator;
 
-        String[] options = {"Pizza", "Hero", "Burrito"};
-        //  ImageIcon icon = new ImageIcon("src/images/turtle32.png");
+            iterator = menulist.iterator();
+            while (iterator.hasNext()) {
+                System.out.println(iterator.next());
+                menucnt++;
+            }
+            
+            options = new String[menucnt];
+
+            for ( int i = 0; i < menucnt; i++ ) {
+                String s = menulist.get(i).toString();;
+                System.out.println(s);
+                options[i] = s;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+	}
+
+       
         String n = (String)JOptionPane.showInputDialog(null, "Which Type of dinner",
                 "Pizza", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-       // System.out.println(n);
+    
         return(n);
     }    
     
-    
-     void setButtons() {
-        if ( dinnerType.contentEquals("Pizza") )
-        {
-  
-           b1.setText(pizza.b1);
-           b2.setText(pizza.b2);            
-           b3.setText(pizza.b3);          
-           b4.setText(pizza.b4);          
-           b5.setText(pizza.b5);          
-           b6.setText(pizza.b6);           
-           b7.setText(pizza.b7);          
-           b8.setText(pizza.b8);         
-           b9.setText(pizza.b9);
+    void setButtonsFile() {
+        
+        JSONParser parser = new JSONParser();
+        Object obj;
+        
+		try {
+                    
+                    String fileType = dinnerType+".json";
+                            
+                     obj = parser.parse(new FileReader(fileType));
+                    
+			// A JSON object. Key value pairs are unordered. JSONObject supports java.util.Map interface.
+			JSONObject jsonObject = (JSONObject) obj;
+                        JSONArray sizelist = (JSONArray) jsonObject.get("sizelist");
+                        JSONArray buttonlist = (JSONArray) jsonObject.get("buttonlist");
+                        JSONArray radiolist = (JSONArray) jsonObject.get("radiolist");
+;
+                        String name = jsonObject.get("name").toString();
+                              
+                        System.out.println(name);
+			Iterator<JSONObject> iterator;
+			iterator = sizelist.iterator();
+			while (iterator.hasNext()) {
+				System.out.println(iterator.next());
+			}
+                        
+                        iterator = radiolist.iterator();
+			while (iterator.hasNext()) {
+				System.out.println(iterator.next());
+			}                       
+                        
+                        iterator = buttonlist.iterator();
+			while (iterator.hasNext()) {
+				System.out.println(iterator.next());
+			}
+                        
+                        for ( int i = 0; i < buttons.size(); i++)
+                        {
+                            JToggleButton b = buttons.get(i);
+                            String s = buttonlist.get(i).toString();
+                            b.setText(s);
+                        }
+                        
+                        for ( int i = 0; i < radios.size(); i++)
+                        {
+                            JRadioButton r = radios.get(i);
+                            String s = radiolist.get(i).toString();
+                            r.setText(s);
+                        }
+                        
+                        textField1.setText(name);
+ 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-           b11.setText(pizza.b11);          
-           b12.setText(pizza.b12);         
-           b13.setText(pizza.b13);
-          
-           textField1.setText(pizza.name);
-            
-           r1.setText(pizza.r1);
-           r2.setText(pizza.r2);            
-           r3.setText(pizza.r3);          
-       
-        } else if ( dinnerType.contentEquals("Hero") )
-        {
-  
-           b1.setText(hero.b1);
-           b2.setText(hero.b2);            
-           b3.setText(hero.b3);          
-           b4.setText(hero.b4);          
-           b5.setText(hero.b5);          
-           b6.setText(hero.b6);           
-           b7.setText(hero.b7);          
-           b8.setText(hero.b8);         
-           b9.setText(hero.b9);
-           
-           b11.setText(hero.b11);
-           b12.setText(hero.b12);
-           b13.setText(hero.b13);
-            
-           textField1.setText(hero.name);
-           
-           r1.setText(hero.r1);
-           r2.setText(hero.r2);            
-           r3.setText(hero.r3);          
-        } else if ( dinnerType.contentEquals("Burrito") )
-        {
-  
-           b1.setText(burrito.b1);
-           b2.setText(burrito.b2);            
-           b3.setText(burrito.b3);          
-           b4.setText(burrito.b4);          
-           b5.setText(burrito.b5);          
-           b6.setText(burrito.b6);           
-           b7.setText(burrito.b7);          
-           b8.setText(burrito.b8);         
-           b9.setText(burrito.b9);
-           
-           b11.setText(burrito.b11);
-           b12.setText(burrito.b12);
-           b13.setText(burrito.b13);
-            
-           textField1.setText(burrito.name);
-           
-           r1.setText(burrito.r1);
-           r2.setText(burrito.r2);            
-           r3.setText(burrito.r3);          
-        } 
-
-     }
+        
+    }
+     
      
      
     /**
@@ -477,7 +405,8 @@ static class burrito {
                     else
                         dinnerIndex = 0;
                 
-                    setButtons();
+                    setButtonsFile();
+
                     }
                 
                 
@@ -567,25 +496,10 @@ static class burrito {
                 else
                     dinnerIndex = 0;
                 
-                setButtons();
+                setButtonsFile();
             }
             
-          /*
-            if (dinnerType == null ){
-                
-                dinnerType = getDinnerType();
-        
-                if ( dinnerType.contentEquals("Pizza"))
-                    dinnerIndex = 0;
-                else if ( dinnerType.contentEquals("Hero"))
-                    dinnerIndex = 1;
-                else
-                    dinnerIndex = 0;
-                
-                setButtons();
-            }
-            */
-          
+
          //  messageArea.append("bottom input"+lineCnt+"\n");
           
           
@@ -631,9 +545,7 @@ static class burrito {
         client.r2 = frame.r2();
         client.r3 = frame.r3();
         
-        
-         
-        
+
        // array groupings
                  
         client.buttons.add(client.b1);
@@ -646,18 +558,15 @@ static class burrito {
         client.buttons.add(client.b8);
         client.buttons.add(client.b9);  
         
-       client.buttons.add(client.b11);   
-       client.buttons.add(client.b12);   
-       client.buttons.add(client.b13);   
+        client.buttons.add(client.b11);   
+        client.buttons.add(client.b12);   
+        client.buttons.add(client.b13);   
         
  
         client.radios.add(client.r1);
         client.radios.add(client.r2);           
         client.radios.add(client.r3);
     
-        
-        
-        
         client.debug = frame.debug();
        
         client.place = frame.place();

@@ -1,0 +1,27 @@
+{
+"name": "Pizza Chat", 
+"buttonlist" : [          
+"Pepperoni",
+"Sausage",
+"Meatballs",
+"Bacon",
+"Mushrooms",
+"Black Olives",
+"Green Peppers",
+"Onions",
+"Spinach",    
+"Ricotta Cheese",
+"Margherita",
+"Extra Cheese"
+	],
+"radiolist": [
+"Small",
+"Medium",
+"Large"
+	],      
+"sizelist":  [ 
+"Small",
+"Medium",
+"Large"
+	]
+}

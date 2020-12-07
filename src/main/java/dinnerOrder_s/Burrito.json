@@ -1,0 +1,27 @@
+{
+"name": "Burrito Chat", 
+"buttonlist" : [          
+"Beef",
+"Pulled Pork",
+"Shredded Chicken",
+"Cheddar Cheese",
+"Black Beans",
+"Pinto Beans",
+"Pico De Gallo",
+"Sour Cream",
+"Guacamole",    
+"No Rice",
+"Brown Rice",
+"Bowl Instead"
+	],
+"radiolist": [
+"Small",
+"Medium",
+"Large"
+	],      
+"sizelist":  [ 
+"Small",
+"Medium",
+"Large"
+	]
+}

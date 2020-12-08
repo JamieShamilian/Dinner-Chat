@@ -7,8 +7,6 @@ package dinnerOrder_s;
  * @author Jamie Shamilian
  */
 
-
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -34,8 +32,6 @@ import org.json.simple.parser.JSONParser;
 import java.io.FileReader;
 import java.util.Iterator;
 
-
-
 public class JavaChatClient {
 
     BufferedReader in;
@@ -44,7 +40,7 @@ public class JavaChatClient {
     JFrame frame;
     JTextField textField,textField1;
     JTextArea messageArea,messageArea2;
-    JToggleButton b1,b2,b3,b4,b5,b6,b7,b8,b9,b11,b12,b13,b0,debug;
+    JToggleButton debug;
     JRadioButton r1,r2,r3,r0;
     JButton place,cancel,refresh;
     String Order;
@@ -130,6 +126,12 @@ public class JavaChatClient {
                     }
                 }
                 
+                if ( Order.startsWith("No") )
+                {
+                  messageArea2.append (Order+"Please select size\n");
+                  return;
+                }
+                
                 for ( JToggleButton b : buttons ) {
                     if ( b.isSelected() )
                         Order += ( b.getText() + ", ") ;
@@ -138,10 +140,19 @@ public class JavaChatClient {
                 messageArea2.append (Order+"\n");      
                 
                 out.println("Placed Order:" + Order);
+                
+                for ( JRadioButton r : radios ) {
+                    r.setSelected(false);
+                 }
+            
+                for ( JToggleButton b : buttons ) {
+                    b.setSelected(false);
+                }
+                
+                sendStatus();
 
             }
         });
-        
         
         cancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -273,15 +284,16 @@ public class JavaChatClient {
 
             iterator = menulist.iterator();
             while (iterator.hasNext()) {
-                System.out.println(iterator.next());
                 menucnt++;
+                //System.out.println(iterator.next());
+                iterator.next();
             }
             
             options = new String[menucnt];
 
             for ( int i = 0; i < menucnt; i++ ) {
                 String s = menulist.get(i).toString();;
-                System.out.println(s);
+                //System.out.println(s);
                 options[i] = s;
             }
 
@@ -309,28 +321,17 @@ public class JavaChatClient {
                     
 			// A JSON object. Key value pairs are unordered. JSONObject supports java.util.Map interface.
 			JSONObject jsonObject = (JSONObject) obj;
-                        JSONArray sizelist = (JSONArray) jsonObject.get("sizelist");
+                        //JSONArray sizelist = (JSONArray) jsonObject.get("sizelist");
                         JSONArray buttonlist = (JSONArray) jsonObject.get("buttonlist");
                         JSONArray radiolist = (JSONArray) jsonObject.get("radiolist");
-;
+
                         String name = jsonObject.get("name").toString();
                               
-                        System.out.println(name);
 			Iterator<JSONObject> iterator;
-			iterator = sizelist.iterator();
-			while (iterator.hasNext()) {
-				System.out.println(iterator.next());
-			}
                         
-                        iterator = radiolist.iterator();
-			while (iterator.hasNext()) {
-				System.out.println(iterator.next());
-			}                       
-                        
-                        iterator = buttonlist.iterator();
-			while (iterator.hasNext()) {
-				System.out.println(iterator.next());
-			}
+			//iterator = sizelist.iterator();
+                        iterator = radiolist.iterator();                      
+                        iterator = buttonlist.iterator();	
                         
                         for ( int i = 0; i < buttons.size(); i++)
                         {
@@ -406,7 +407,6 @@ public class JavaChatClient {
                         dinnerIndex = 0;
                 
                     setButtonsFile();
-
                     }
                 
                 
@@ -455,7 +455,7 @@ public class JavaChatClient {
                         messageArea.append(line.substring(7));
                         messageArea.append(">\n");
                     }
-                 
+                JToggleButton b0 = buttons.get(0);
                 for ( JToggleButton b : buttons ) {
                    // String s = b.getText().substring(0,4);
                     String s = b.getText();
@@ -501,12 +501,10 @@ public class JavaChatClient {
             
 
          //  messageArea.append("bottom input"+lineCnt+"\n");
-          
-          
+                   
         }
     }
   
-   
  
     /**
      * @param args the command line arguments
@@ -525,44 +523,23 @@ public class JavaChatClient {
         client.messageArea = frame.getMessageArea();
         client.messageArea2 = frame.getMessageArea2();
         
-        
-        client.b1 = frame.b1();
-        client.b2 = frame.b2();
-        client.b3 = frame.b3();
-        client.b4 = frame.b4();
-        client.b5 = frame.b5();
-        client.b6 = frame.b6();
-        client.b7 = frame.b7();
-        client.b8 = frame.b8();
-        client.b9 = frame.b9();
-        
-        client.b11 = frame.b11();
-        client.b12 = frame.b12();
-        client.b13 = frame.b13();
-        
-        
         client.r1 = frame.r1();
         client.r2 = frame.r2();
         client.r3 = frame.r3();
         
-
-       // array groupings
-                 
-        client.buttons.add(client.b1);
-        client.buttons.add(client.b2);           
-        client.buttons.add(client.b3);
-        client.buttons.add(client.b4);
-        client.buttons.add(client.b5);
-        client.buttons.add(client.b6);
-        client.buttons.add(client.b7);
-        client.buttons.add(client.b8);
-        client.buttons.add(client.b9);  
+        client.buttons.add(frame.b1());
+        client.buttons.add(frame.b2());
+        client.buttons.add(frame.b3());
+        client.buttons.add(frame.b4());
+        client.buttons.add(frame.b5());
+        client.buttons.add(frame.b6());
+        client.buttons.add(frame.b7());
+        client.buttons.add(frame.b8());
+        client.buttons.add(frame.b9());
+        client.buttons.add(frame.b11());
+        client.buttons.add(frame.b12());
+        client.buttons.add(frame.b13());
         
-        client.buttons.add(client.b11);   
-        client.buttons.add(client.b12);   
-        client.buttons.add(client.b13);   
-        
- 
         client.radios.add(client.r1);
         client.radios.add(client.r2);           
         client.radios.add(client.r3);
@@ -584,8 +561,7 @@ public class JavaChatClient {
         } catch ( Exception e)
         {
         }
-        
-        
+  
     }
     
 }

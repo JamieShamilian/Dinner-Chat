@@ -22,5 +22,5 @@ hero chat ( herochat.mp4 )
 
 burrito chat ( burritochat.mp4 )
 
-2 cleints creating a burrito order
+2 clients creating a burrito order
 

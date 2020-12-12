@@ -1,0 +1,73 @@
+
+protocols info
+
+
+Server sends
+Client Read from socket
+
+Client 
+
+
+"SUBMITNAME" -> send server name
+
+"NAMEACCEPTED" -> 
+
+"NAMEACCEPTED 1 " -> this initializes dinnertype and reads buttons from file
+
+SYNC: -> send status
+
+SIZE: -> set/reset  radio buttons from server
+
+STUFF: -> set/ reset buttons from server
+
+MESSAGE -> write the message to the messageArea
+
+TYPE -> set the type in the client and read the buttonsfile
+
+
+client sending status 
+
+^+<text>  -> send the radio button is set
+
+^-<text>  -> send the radio button is reset
+
++<text> -> send the button is set
+
+-<text> -> send the button is reset
+
+$<dinnerType> -> send the type message to server
+
+
+
+
+Server
+
+
+
+create listen socket
+and loop forever and accept connections
+
+create a Handler that is a thread class.
+
+loop forever in the run of the handler
+
+when I get a new client I ask for the client to SUBMITNAME
+
+"SUBMITNAME" -> client
+
+server waits for response and add the name to the names array.
+
+NAMEACCEPTED -> client
+
+SYNC: -> to all clients
+
+
+start while loop forever
+
+readline 
+
+startswith
+
+$<token> -> TYPE: <token>
+
++<token> -> STUFF: <token>
